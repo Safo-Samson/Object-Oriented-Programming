@@ -14,50 +14,33 @@ import java.util.Set;
 
 public class MyMiscellaneous {
 
-
-    // todo change how this works to work with mikes basically;
-    // todo because all these methods are associated with the class, the file filed and booleans shouldn't be passed as parameters
-    public static DateComputer computeDateDestination(File file, boolean useExifDate, boolean useFilenameDate, boolean useFileTimestamp) {
+    public static DateComputer computeDateDestination(File file, boolean useExifolderDate, boolean useFilenameDate, boolean useFileTimestamp) {
         DateComputer dateDestination = null;
-        if (useExifDate) {
-            ExifDate.getDate(file);
+        if (useExifolderDate) {
+             ExifDate ex = new ExifDate();
+             dateDestination = ex.getDate(file);
         }
+
         if (dateDestination == null && useFilenameDate) {
-            dateDestination = FileNameDate.getDate(file);
+            FileNameDate fn = new FileNameDate();
+            dateDestination = fn.getDate(file);
         }
         if (dateDestination == null && useFileTimestamp) {
-            dateDestination = FileTimestamp.getDate(file);
+            FileTimestamp ft = new FileTimestamp();
+            dateDestination = ft.getDate(file);
         }
         return dateDestination;
     }
 
-    public static File getDestinationFolder(final DateComputer date, final boolean useYearFolders, final boolean useYearAndMonthFolders,
-                                            final boolean useYearMonthDateFolders) {
-        File parent = null;
-
-        if (useYearFolders) {
-            parent = new File(parent, String.format("%04d", DateComputer.getYear())); //todo, ask Mike why you cant use the get method
-        }
-        if (useYearAndMonthFolders) {
-            parent = new File(parent, String.format("%04d", DateComputer.getYear()) + "-" + String.format("%02d", DateComputer.getMonth()));
-        }
-        if (useYearMonthDateFolders) {
-            parent = new File(parent, String.format("%04d", DateComputer.getYear()) + "-" + String.format("%02d", DateComputer.getMonth())
-                    + "-" + String.format("%02d", DateComputer.getDay()));
-        }
-
-        return parent;
-    }
-
-    //todo know which classes to add this method and the next
-    //todo didnt take it out because i will need to make it static which will affect the functionality
-    public static void process(File file,boolean useExifDate, boolean useFilenameDate, boolean useFileTimestamp,
-                               boolean useYearFolders, boolean useYearAndMonthFolders, boolean useYearMonthDateFolders,
+    public static void process(File file,boolean useExiffolderDate, boolean useFilenameDate, boolean useFileTimestamp, FoldersDate folderDate,
                                File outputFolder, boolean simulation, Set<File> duplicateDetector) throws IOException {
-        DateComputer dateDestination = computeDateDestination(file,useExifDate, useFilenameDate,useFileTimestamp);
+        DateComputer dateDestination = computeDateDestination(file,useExiffolderDate, useFilenameDate,useFileTimestamp);
         if (dateDestination != null) {
-            System.out.println("Date determined for '" + file + "' " + DateComputer.year + "-" + DateComputer.month + "-" + DateComputer.day + " (" + DateComputer.className + ")");
-            File destinationFolder = getDestinationFolder(dateDestination, useYearFolders, useYearAndMonthFolders, useYearMonthDateFolders);
+            //System.out.println("Date determined for '" + file + "' " + DateComputer.year + "-" + DateComputer.month + "-" + DateComputer.day + " (" + DateComputer.className + ")");
+            System.out.println("Date determined for '" + file + "' " + dateDestination.getYear() + "-" + dateDestination.getMonth() + "-" + dateDestination.getDay() + " (" + dateDestination.getClassName() + ")");
+
+            File destinationFolder = folderDate.getDestinationFolder(dateDestination);
+
             File outputDestinationFolder = new File(outputFolder, destinationFolder.getPath());
             File destinationFilename = new File(outputDestinationFolder, file.getName());
 
@@ -88,6 +71,7 @@ public class MyMiscellaneous {
             System.out.println("Could not determine date for '" + file + "'.");
         }
     }
+
 
     protected static DateComputer parseDateFromFilename(final String filename) {
         final List<LocalDate> possibles = new ArrayList<>();

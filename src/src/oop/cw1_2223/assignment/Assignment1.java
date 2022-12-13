@@ -199,7 +199,7 @@ public class Assignment1 {
     if (useExifDate) {
       try {
         java.util.Date date = ExifUtils.getFirstDate(ExifUtils.getMetaData(file));
-        if (date != null) {
+        if (dateDestination != null) {
           ZonedDateTime zdt = date.toInstant().atZone(ZoneId.systemDefault());//.toLocalDate();
           dateDestination = new Object[] {zdt.getYear(), zdt.getMonthValue(), zdt.getDayOfMonth(), "EXIF data"};
         }
@@ -537,6 +537,6 @@ public class Assignment1 {
     boolean useYearMonthDayFolders = true;
 
     scanFolders(outputFolder, simulation, useYearFolders, useYearAndMonthFolders, useYearMonthDayFolders);
-    //scanFolders(outputFolder,simulation,targetFolderList);
+
   }
 }

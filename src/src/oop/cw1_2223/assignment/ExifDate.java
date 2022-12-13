@@ -7,14 +7,13 @@ import java.io.IOException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-public class ExifDate extends DateComputer {
-
-    private static DateComputer dateDestination = null;
-    public ExifDate(int year, int month, int day, String className) {
-        super(year, month, day, className);
+public class ExifDate extends DateComputer implements DateFinder {
+    public ExifDate() {
+        super();
     }
-
-    public static DateComputer getDate(File file) {
+    private DateComputer dateDestination = null;
+    @Override
+    public DateComputer getDate(File file) {
                 {
                     try {
                         java.util.Date date = ExifUtils.getFirstDate(ExifUtils.getMetaData(file));
@@ -24,12 +23,11 @@ public class ExifDate extends DateComputer {
                             month = zdt.getMonthValue();
                             day = zdt.getDayOfMonth();
                             className = "Exif data";
-                           dateDestination = new ExifDate(year,month,day,className);
+                           dateDestination = new DateComputer(year,month,day,className);
                         }
                     } catch (ImageProcessingException | IOException e){
                                  System.out.println(e);}
                 }
-
                 return dateDestination;
         }
 

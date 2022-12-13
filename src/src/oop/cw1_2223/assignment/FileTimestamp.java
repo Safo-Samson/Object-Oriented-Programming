@@ -5,22 +5,20 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-public class FileTimestamp extends DateComputer {
-
-    static DateComputer dateDestination = null;
-
-    public FileTimestamp(int year, int month, int day, String className) {
-        super(year, month, day, className);
+public class FileTimestamp extends DateComputer implements DateFinder {
+    public FileTimestamp() {
+        super();
     }
-
-    public static DateComputer getDate(File file) {
+    private DateComputer dateDestination = null;
+    @Override
+    public DateComputer getDate(File file) {
     long timestamp = file.lastModified();
     ZonedDateTime zdt = ZonedDateTime.ofInstant(Instant.ofEpochMilli(timestamp),ZoneId.systemDefault());
         year = zdt.getYear();
         month = zdt.getMonthValue();
         day = zdt.getDayOfMonth();
-        className = "File TimeStamp CREATED";
-    dateDestination =  new FileNameDate(year,month,day,className);
+        className = "FileTimeStamp";
+    dateDestination =  new DateComputer(year,month,day,className);
     return dateDestination;
     }
 

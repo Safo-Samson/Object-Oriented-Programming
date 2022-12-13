@@ -10,38 +10,22 @@ public class OrganisedTargetFolder {
     private File targetFolder;
     private Flag setFlags ;
 
-
     public OrganisedTargetFolder(File targetFolder, Flag setFlags) {
         this.targetFolder = targetFolder;
         this.setFlags = setFlags;
     }
 
 
-//    public void addFolder(List<OrganisedTargetFolder> targetFolders, OrganisedTargetFolder newFolder) {
-//        targetFolders.add(newFolder);
-//    }
-//    //todo UNNEDDED
-//    public  void addFolder(OrganisedTargetFolder newFolder) {
-//    List<OrganisedTargetFolder> targetFolders = new ArrayList<>();
-//        targetFolders.add(newFolder);
-//    }
-
-    public void  scanFolders(File outputFolder, final boolean simulation,final boolean useYearFolders,
-                              final boolean useYearAndMonthFolders, final boolean useYearMonthDateFolders,
-                              List<OrganisedTargetFolder> targetFolders) throws IOException {
+    public void scanFolders(File outputFolder, final boolean simulation,FoldersDate fd,List<OrganisedTargetFolder> targetFolders) throws IOException {
         Set<File> duplicateDetector = new HashSet<>();
         for (OrganisedTargetFolder folder : targetFolders)
-            scan(folder,useYearFolders,useYearAndMonthFolders,useYearMonthDateFolders, outputFolder, simulation, duplicateDetector);
+            scan(folder,fd, outputFolder, simulation, duplicateDetector);
     }
 
-    private void scan(OrganisedTargetFolder folder,final boolean useYearFolders,
-                      final boolean useYearAndMonthFolders, final boolean useYearMonthDateFolders,
-                      File outputFolder, boolean simulation, Set<File> duplicateDetector) throws IOException {
+    private void scan(OrganisedTargetFolder folder, FoldersDate fd,File outputFolder, boolean simulation, Set<File> duplicateDetector) throws IOException {
         List<File> files = folder.getFiles();
         for (File file : files) {
-            process(file, setFlags.useExifDate(),setFlags.useFilenameDate(),
-                    setFlags.useFileTimestamp(),useYearFolders,useYearAndMonthFolders,useYearMonthDateFolders,
-                    outputFolder, simulation, duplicateDetector);
+            process(file, setFlags.useExifDate(),setFlags.useFilenameDate(),setFlags.useFileTimestamp(),fd,outputFolder, simulation, duplicateDetector);
         }
     }
 
